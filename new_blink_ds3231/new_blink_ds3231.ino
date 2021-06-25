@@ -29,6 +29,7 @@
 
 RTC_DS3231 rtc; //OBJETO DO TIPO RTC_DS3231
 int h,m,s;
+bool um,dois;
 
 void setup() {
   // put your setup code here, to run once:
@@ -37,6 +38,8 @@ void setup() {
   pinMode(bomba2,OUTPUT);
   digitalWrite(bomba1,LOW);
   digitalWrite(bomba2,LOW);
+  um = false;
+  dois = false;
 
 } // end setup
 
@@ -48,25 +51,31 @@ void loop() {
   m = now.minute();
   s = now.second();
 
-  if (h == 16){
-    digitalWrite(bomba1,HIGH);
-    Serial.println("BOMBA1 LIGA");
-  }
-  if (h != 16){
-    digitalWrite(bomba1,LOW);
-    Serial.println("BOMBA1 DESLIGA");
-  }
-  
-  /*
-  if ((m > 45) && (m < 50)){
-    digitalWrite(bomba2,HIGH);
-    Serial.println("BOMBA2 LIGA");
-  }
+  switch (h){
+    case 17:
+      um = true;
+      break;
+    default:
+      um = false;
+      break;
+  } // end switch bomba 1
 
-  if ((m <=45) && (m >= 50)){
-    digitalWrite(bomba2,LOW);
-    Serial.println("BOMBA2 DESLIGA");
-  }
-  */
+  switch (m){
+    case 2:
+      dois = true;
+      break;
+    case 4:
+      dois = true;
+      break;
+    case 8:
+      dois = true;
+      break;
+    default:
+      dois = false;
+      break;
+  } // end switch bomba 2
+  
+  digitalWrite(bomba1,um);
+  digitalWrite(bomba2,dois);
   
 } // end loop
