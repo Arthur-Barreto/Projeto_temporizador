@@ -31,19 +31,16 @@ RTC_DS3231 rtc; //OBJETO DO TIPO RTC_DS3231
 
 char daysOfTheWeek[7][12] = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
 
-int h;
-bool um;
+int h,m,s;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(bomba1,OUTPUT);
-  //pinMode(bomba2,OUTPUT);
-  digitalWrite(bomba1,LOW);
-  //digitalWrite(bomba2,LOW);
-  um = false;
-  //dois = false;
-
+  pinMode(bomba2,OUTPUT);
+  digitalWrite(bomba1,HIGH);
+  digitalWrite(bomba2,HIGH);
+  delay(1000);
 } // end setup
 
 void loop() {
@@ -51,34 +48,39 @@ void loop() {
   DateTime now = rtc.now(); //CHAMADA DE FUNÇÃO
 
   h = now.hour();
+  m = now.minute();
+  s = now.second();
+
+  if (h == 11){
+      digitalWrite(bomba1,HIGH);
+      delay(500);
+      digitalWrite(bomba2,HIGH);
+      delay(500);
+      Serial.println("liga");
+  } /* end if */
+
+  else{
+      digitalWrite(bomba1,LOW);
+      delay(500);
+      digitalWrite(bomba2,LOW);
+      delay(500);
+      Serial.println("desliga");
+  } /* ennd if */
   
+  /*
   switch (h){
-    case 5:
-      um = true;
+    case 11:
+      digitalWrite(bomba1,HIGH);
+      digitalWrite(bomba2,HIGH);
       break;
     default:
-      um = false;
+      digitalWrite(bomba1,LOW);
+      digitalWrite(bomba2,LOW);
       break;
   } // end switch bomba 1
-/*
-  switch (m){
-    case 2:
-      dois = true;
-      break;
-    case 4:
-      dois = true;
-      break;
-    case 8:
-      dois = true;
-      break;
-    default:
-      dois = false;
-      break;
-  } // end switch bomba 2
-  */
-  digitalWrite(bomba1,um);
-  //digitalWrite(bomba2,dois);
-
+  */ 
+  
+  /*
   Serial.print("Data: "); //IMPRIME O TEXTO NO MONITOR SERIAL
   Serial.print(now.day(), DEC); //IMPRIME NO MONITOR SERIAL O DIA
   Serial.print('/'); //IMPRIME O CARACTERE NO MONITOR SERIAL
@@ -87,6 +89,7 @@ void loop() {
   Serial.print(now.year(), DEC); //IMPRIME NO MONITOR SERIAL O ANO
   Serial.print(" / Dia: "); //IMPRIME O TEXTO NA SERIAL
   Serial.print(daysOfTheWeek[now.dayOfTheWeek()]); //IMPRIME NO MONITOR SERIAL O DIA
+  */
   Serial.print(" / Horas: "); //IMPRIME O TEXTO NA SERIAL
   Serial.print(now.hour(), DEC); //IMPRIME NO MONITOR SERIAL A HORA
   Serial.print(':'); //IMPRIME O CARACTERE NO MONITOR SERIAL
@@ -94,6 +97,6 @@ void loop() {
   Serial.print(':'); //IMPRIME O CARACTERE NO MONITOR SERIAL
   Serial.print(now.second(), DEC); //IMPRIME NO MONITOR SERIAL OS SEGUNDOS
   Serial.println(); //QUEBRA DE LINHA NA SERIAL
-  delay(1000); //INTERVALO DE 1 SEGUNDO
+  //delay(1000); //INTERVALO DE 1 SEGUNDO
   
 } // end loop
